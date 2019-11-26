@@ -13,6 +13,9 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json())
 
+// Routes
+app.use('/api/products', require('./routes/product.routes'))
+
 // Starting server
 app.listen(app.get('port'), () => {
   console.log('Server on port', app.get('port'))
