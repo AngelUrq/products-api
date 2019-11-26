@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
 
-const mongoose = require('./database')
+require('./database')
 
 // Settings
 app.set('port', process.env.PORT || 3000)
