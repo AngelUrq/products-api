@@ -1,0 +1,12 @@
+{
+  "swaggerDefinition": {
+    "host": "localhost:3000",
+    "basePath": "/",
+    "info": {
+      "title": "Products API",
+      "description": "API",
+      "servers": ["http://localhost:3000"]
+    }
+  },
+  "apis": ["./routes/product.routes.js"]
+}

@@ -3,6 +3,10 @@ const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
 
+const swaggerUI = require('swagger-ui-express')
+const swaggerJsDoc = require('swagger-jsdoc')
+const swaggerConfiguration = require('./swagger.json')
+
 require('./database')
 
 // Settings
@@ -14,7 +18,12 @@ app.use(morgan('dev'))
 app.use(express.json())
 
 // Routes
-app.use('/api/products', require('./routes/product.routes'))
+app.use('/product-management/products', require('./routes/product.routes'))
+
+// Swagger
+const swaggerDocs = swaggerJsDoc(swaggerConfiguration)
+app.use('/swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
+
 
 // Starting server
 app.listen(app.get('port'), () => {

@@ -3,8 +3,25 @@ const productController = {}
 
 productController.getProducts = async (req, res) => {
   try {
-    const products = await Product.find()
-    res.json(products)
+    if (req.query.ids) {
+      let idArray = req.query.ids.split(',')
+    } else {
+      const products = await Product.find()
+      res.json(products)
+    }
+  } catch (error) {
+    res.status(404).json({
+      message: error
+    })
+  }
+}
+
+productController.getProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id)
+    res.json({
+      product
+    })
   } catch (error) {
     res.status(404).json({
       message: error
@@ -15,22 +32,10 @@ productController.getProducts = async (req, res) => {
 productController.createProduct = async (req, res) => {
   try {
     const product = new Product(req.body)
+
     await product.save()
     res.json({
       status: 'Product saved'
-    })
-  } catch (error) {
-    res.status(404).json({
-      message: error
-    })
-  }
-}
-
-productController.getProduct = async (req, res) => {
-  try {
-    const client = await Product.findById(req.params.id)
-    res.json({
-      client
     })
   } catch (error) {
     res.status(404).json({
@@ -43,7 +48,6 @@ productController.updateProduct = async (req, res) => {
   try {
     const { id } = req.params
     const product = {
-      code: req.body.code,
       name: req.body.name,
       stock: req.body.stock
     }

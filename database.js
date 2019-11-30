@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-const URI = 'mongodb://localhost/stockDB'
+const config = require('./config')
 
-mongoose.connect(URI , { useUnifiedTopology: true, useNewUrlParser: true })
+mongoose.connect(config.databaseURL , { useUnifiedTopology: true, useNewUrlParser: true })
     .then(db => console.log('DB is connected'))
     .catch(err => console.log('err', err))
 
