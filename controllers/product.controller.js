@@ -4,7 +4,13 @@ const productController = {}
 productController.getProducts = async (req, res) => {
   try {
     if (req.query.ids) {
-      let idArray = req.query.ids.split(',')
+      let codeArray = req.query.ids.split(',')
+
+      const products = await Product.find({
+        'code': { $in: codeArray}
+      })
+  
+      res.json(products)
     } else {
       const products = await Product.find()
       res.json(products)
@@ -18,10 +24,11 @@ productController.getProducts = async (req, res) => {
 
 productController.getProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id)
-    res.json({
-      product
+    const product = await Product.findOne({
+      'code': req.params.code
     })
+
+    res.json(product)
   } catch (error) {
     res.status(404).json({
       message: error
@@ -31,7 +38,24 @@ productController.getProduct = async (req, res) => {
 
 productController.createProduct = async (req, res) => {
   try {
-    const product = new Product(req.body)
+    let codeType = req.body.unit ? 'REF' : 'EMP'
+
+    const lastProduct = await Product
+      .findOne({
+        'code': { $regex: codeType + '.*' }
+      })
+      .sort({
+        'code':-1
+      })
+      .collation({
+        locale: "en_US", 
+        numericOrdering: true
+      })
+
+    const lastNumber = lastProduct ? Number(lastProduct.code.split('-')[1]) : 0
+
+    let product = new Product(req.body)
+    product.code = codeType + '-' + String(lastNumber + 1)
 
     await product.save()
     res.json({
@@ -46,12 +70,12 @@ productController.createProduct = async (req, res) => {
 
 productController.updateProduct = async (req, res) => {
   try {
-    const { id } = req.params
     const product = {
       name: req.body.name,
       stock: req.body.stock
     }
-    await Product.findByIdAndUpdate(id, {
+
+    await Product.findOneAndUpdate( { 'code': req.params.code }, {
       $set: product
     })
     res.json({
@@ -66,7 +90,7 @@ productController.updateProduct = async (req, res) => {
 
 productController.deleteProduct = async (req, res) => {
   try {
-    await Product.findByIdAndDelete(req.params.id)
+    await Product.findOneAndDelete({ 'code': req.params.code })
     res.json({
       status: 'Product deleted'
     })

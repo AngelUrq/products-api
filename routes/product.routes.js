@@ -23,7 +23,7 @@ router.get('/', productController.getProducts)
  *      '200':
  *        description: A successful response
  */
-router.get('/:id', productController.getProduct)
+router.get('/:code', productController.getProduct)
 
 /**
  * @swagger
@@ -52,7 +52,7 @@ router.post('/', productController.createProduct)
  *      '200':
  *        description: A successful response
  */
-router.put('/:id', productController.updateProduct)
+router.put('/:code', productController.updateProduct)
 
 /**
  * @swagger
@@ -63,6 +63,6 @@ router.put('/:id', productController.updateProduct)
  *      '200':
  *        description: A successful response
  */
-router.delete('/:id', productController.deleteProduct)
+router.delete('/:code', productController.deleteProduct)
 
 module.exports = router
