@@ -9,10 +9,10 @@ productController.getProducts = async (req, res) => {
       const products = await Product.find({
         'code': { $in: codeArray}
       })
-  
+
       res.json(products)
     } else {
-      const products = await Product.find()
+      products = await Product.find()
       res.json(products)
     }
   } catch (error) {
@@ -28,7 +28,11 @@ productController.getProduct = async (req, res) => {
       'code': req.params.code
     })
 
-    res.json(product)
+    if (product) {
+      res.json(product)
+    } else{
+      res.json({})
+    }
   } catch (error) {
     res.status(404).json({
       message: error
