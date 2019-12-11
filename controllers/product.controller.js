@@ -1,108 +1,70 @@
-const Product = require('../models/product')
+const productService = require('../services/product.service')
+
 const productController = {}
 
 productController.getProducts = async (req, res) => {
-  try {
-    if (req.query.ids) {
-      let codeArray = req.query.ids.split(',')
-
-      const products = await Product.find({
-        'code': { $in: codeArray}
-      })
-
-      res.json(products)
-    } else {
-      products = await Product.find()
-      res.json(products)
-    }
-  } catch (error) {
-    res.status(404).json({
-      message: error
+  productService.getProducts(req.params.ids)
+    .then(response => {
+      res.json(response)
     })
-  }
+    .catch(error => {
+      res.json({
+        code: 500,
+        message: error.message
+      })
+    })
 }
 
 productController.getProduct = async (req, res) => {
-  try {
-    const product = await Product.findOne({
-      'code': req.params.code
+  productService.getProduct(req.params.code)
+    .then(response => {
+      res.json(response)
     })
-
-    if (product) {
-      res.json(product)
-    } else{
-      res.json({})
-    }
-  } catch (error) {
-    res.status(404).json({
-      message: error
+    .catch(error => {
+      res.json({
+        code: 500,
+        message: error.message
+      })
     })
-  }
 }
 
 productController.createProduct = async (req, res) => {
-  try {
-    let codeType = req.body.unit ? 'REF' : 'EMP'
-
-    const lastProduct = await Product
-      .findOne({
-        'code': { $regex: codeType + '.*' }
-      })
-      .sort({
-        'code':-1
-      })
-      .collation({
-        locale: "en_US", 
-        numericOrdering: true
-      })
-
-    const lastNumber = lastProduct ? Number(lastProduct.code.split('-')[1]) : 0
-
-    let product = new Product(req.body)
-    product.code = codeType + '-' + String(lastNumber + 1)
-
-    await product.save()
-    res.json({
-      status: 'Product saved'
+  productService.createProduct(req.body)
+    .then(response => {
+      res.json(response)
     })
-  } catch (error) {
-    res.status(404).json({
-      message: error
+    .catch(error => {
+      res.json({
+        code: 500,
+        message: error.message
+      })
     })
-  }
 }
 
 productController.updateProduct = async (req, res) => {
-  try {
-    const product = {
-      name: req.body.name,
-      stock: req.body.stock
-    }
-
-    await Product.findOneAndUpdate( { 'code': req.params.code }, {
-      $set: product
+  productService.updateProduct(req.params.code, req.body)
+    .then(response => {
+      res.json(response)
     })
-    res.json({
-      status: 'Product updated'
+    .catch(error => {
+      res.json({
+        code: 500,
+        message: error.message
+      })
     })
-  } catch (error) {
-    res.status(404).json({
-      message: error
-    })
-  }
 }
 
 productController.deleteProduct = async (req, res) => {
-  try {
-    await Product.findOneAndDelete({ 'code': req.params.code })
-    res.json({
-      status: 'Product deleted'
+  productService.deleteProduct(req.params.code)
+    .then(response => {
+      res.json(response)
     })
-  } catch (error) {
-    res.status(404).json({
-      message: error
+    .catch(error => {
+      res.json({
+        code: 500,
+        message: error.message
+      })
     })
-  }
 }
 
 module.exports = productController
