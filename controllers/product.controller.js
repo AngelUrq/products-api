@@ -8,10 +8,7 @@ productController.getProducts = async (req, res) => {
       res.json(response)
     })
     .catch(error => {
-      res.json({
-        code: 500,
-        message: error.message
-      })
+      res.status(500).send(error.message)
     })
 }
 
@@ -21,10 +18,7 @@ productController.getProduct = async (req, res) => {
       res.json(response)
     })
     .catch(error => {
-      res.json({
-        code: 500,
-        message: error.message
-      })
+      res.status(500).send(error.message)
     })
 }
 
@@ -34,10 +28,7 @@ productController.createProduct = async (req, res) => {
       res.json(response)
     })
     .catch(error => {
-      res.json({
-        code: 500,
-        message: error.message
-      })
+      res.status(500).send(error.message)
     })
 }
 
@@ -47,10 +38,7 @@ productController.updateProduct = async (req, res) => {
       res.json(response)
     })
     .catch(error => {
-      res.json({
-        code: 500,
-        message: error.message
-      })
+      res.status(500).send(error.message)
     })
 }
 
@@ -60,10 +48,7 @@ productController.deleteProduct = async (req, res) => {
       res.json(response)
     })
     .catch(error => {
-      res.json({
-        code: 500,
-        message: error.message
-      })
+      res.status(500).send(error.message)
     })
 }
 

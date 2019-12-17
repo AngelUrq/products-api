@@ -1,4 +1,4 @@
 {
   "databaseURL": "mongodb://localhost:27017/productsDB",
-  "port": 3000
+  "port": 8092
 }
